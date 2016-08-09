@@ -1,0 +1,51 @@
+#include <wiringPi.h>
+#include <stdio.h>
+
+#define LedPin 0
+#define ButtonPin 1
+
+int running = 0;
+
+int main  (void)
+{
+	FILE *file;
+	
+	if(wiringPiSetup() == -1) {
+		printf("setup wiringPi failed !");
+		return 1;
+	}
+
+	pinMode(LedPin, OUTPUT);
+	pinMode(ButtonPin, INPUT);
+
+	pullUpDnControl(ButtonPin, PUD_UP);  //pull up to 3.3V,make GPIO1 a stable level
+
+	digitalWrite(LedPin, LOW); // led on Show sytem ready
+	printf("StartSystem ready\n");
+	
+	while(1) {
+		while(running == 0) {
+			if(digitalRead(ButtonPin) == 0){ //indicate that button has pressed down
+				delay(1500);
+				file = popen("./checkFerm.sh", "w");
+				if(file != -1) {
+					running = 1;
+					digitalWrite(LedPin, HIGH); // led off cella running
+					printf("cella avviata\n");
+					printf("cella running\n");
+				}
+			}
+		}
+
+		while(running) {
+			if(digitalRead(ButtonPin) == 0){ //indicate that button has pressed down
+				delay(1500);
+				running = 0;
+				digitalWrite(LedPin, LOW); // led on system ready
+				printf("cella stop\n");
+				pclose(file);
+				printf("system ready\n");
+			}
+		}
+	}
+}

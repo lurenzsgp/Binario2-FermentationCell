@@ -1,0 +1,10 @@
+tabella delle connessioni ai pin
+
+pin1 verde
+pin2 oliva
+pin4 arancio
+pin6 giallo
+
+pin38 bianco
+pin39 grigio
+pin40 nero
