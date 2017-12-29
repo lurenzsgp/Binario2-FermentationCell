@@ -7,7 +7,7 @@ float getTemperature ()
         char tmpData[6];   // Temp C * 1000 reported by device
         ssize_t numRead;
 	int fd = open("/sys/bus/w1/devices/w1_bus_master1/28-0315921cdbff/w1_slave", O_RDONLY);
-
+	memset(tmpData, 0, 6);
         if (fd == -1)
         {
                 perror ("Couldn't open the w1 device.");
@@ -17,10 +17,9 @@ float getTemperature ()
 	while ((numRead = read(fd, buf, 256)) > 0)
 	{
 		strncpy(tmpData, strstr(buf, "t=") + 2, 5);
-		tmpData[5] = '\0';
 		printf("Temp: %s\n", tmpData);
-		t = atof(tmpData);
-		printf("Temp: %f C \t", t);
+		t = atoi(tmpData);
+		//printf("Temp: %f C \t", t);
 	}
 	close(fd);
 	return t;
@@ -51,6 +50,7 @@ int fermentazione ()
 		}	
 
 		t = getTemperature();
+		printf("%f\n", t);
 	
 		if( t > TMAX && fOn == 0 ) {
 			digitalWrite(frigo, LOW);	// frigo on
