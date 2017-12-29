@@ -9,3 +9,6 @@ startSystem2.o: startSystem2.c cellaferm.h
 
 cellaferm.o: cellaferm.c cellaferm.h
 	gcc -c cellaferm.c
+
+clean:
+	rm *.o

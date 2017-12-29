@@ -1,0 +1,6 @@
+# Git Ignore file 
+*.o
+*.swp
+.~
+thumbs.db
+
