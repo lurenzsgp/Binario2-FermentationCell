@@ -5,14 +5,14 @@
 #include <signal.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "rotatoryEncoder.h"
 
 #define frigo 28
 #define serpentina 29
 
-#define TMAX 13000
-#define TMIN 11000
-#define TMP 12000
-#define button 1
-
-int fermentazione ();
+void initCell ();
+int fermentazione (int load, int fd);
 float getTemperature ();
+void cooler ();
+void heater();
+float setCellTemperature (int load, int fd);
