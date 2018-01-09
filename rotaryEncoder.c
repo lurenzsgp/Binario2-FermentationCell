@@ -1,4 +1,4 @@
-#include "rotatoryEncoder.h"
+#include "rotaryEncoder.h"
 
 unsigned char flag;
 unsigned char Last_RoB_Status;
@@ -42,10 +42,10 @@ int actionSelector(int fd)
 {
 	int action = 1;
     lcdClear(fd);
-    time_t start = time(null);
+    time_t start = time(NULL);
 	
 	while(1){
-        if (time(null) - start < 300) {
+        if (time(NULL) - start < 300) {
             return 0;
         }
 
@@ -96,10 +96,10 @@ void setTemperature (int fd, float *t)
         printf(buff);
         lcdPosition(fd,0,1);
         lcdPuts(fd,buff);
-        if (rotatoryPress())
+        if (rotaryPress())
             break;
 
-        *t += rotatoryDeal();
+        *t += rotaryDeal();
 
         if (*t > 30) {
             *t = 30;

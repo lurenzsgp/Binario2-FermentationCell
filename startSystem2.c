@@ -3,18 +3,20 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <unistd.h>
+#include <lcd.h>
 #include "cellaferm.h"
 
 
 int main  (void)
 {
     int fd;
+    int action;
     if(wiringPiSetup() == -1) {
         printf("setup wiringPi failed !");
         return 1;
     }
     
-    fd = lcdInit(2,16,4, 2,3, 6,5,4,1,0,0,0,0);
+    fd = lcdInit(2,16,4, 25,24, 23,22,21,14,0,0,0,0);
     if (fd == -1){
 		printf("lcdInit 1 failed\n") ;
 		return 1;
@@ -42,7 +44,7 @@ int main  (void)
                 lcdPosition(fd,0,1);
                 lcdPuts(fd, "  Fermentation");
                 delay(3000);
-                fermentazione(0);
+                fermentazione(0, fd);
                 break;
             case 2 :
                 printf("Cold on");
@@ -65,7 +67,7 @@ int main  (void)
                 printf("Default case");
                 // start the cell
                 // case for unexpected reboot
-                fermentazione(1);
+                fermentazione(1,fd);
         }
     }
 }

@@ -5,7 +5,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "rotatoryEncoder.h"
+#include "rotaryEncoder.h"
 
 #define frigo 28
 #define serpentina 29

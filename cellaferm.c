@@ -58,8 +58,8 @@ float setCellTemperature (int load, int fd)
         char buff[256];
         memset(buff, 0, 256);
         sprintf(buff, "T=%d", tmp * 1000);
-        write(tmpFile, buff, sizeof(buff);
-        close(tmpfile);
+        write(tmpFile, buff, sizeof(buff));
+        close(tmpFile);
     }
     return tmp;
 }
@@ -85,7 +85,7 @@ int fermentazione (int load, int fd)
     lcdPuts(fd,"  CELL RUNNING");
 
     while(1) {
-        if(rotatoryPress()){ 
+        if(rotaryPress()){ 
             // button pressed 
             // stop the execution
             digitalWrite(frigo, HIGH);      // frigo off
@@ -142,7 +142,7 @@ void cooler (int fd)
     lcdPuts(fd,"  Press to stop");
 
     // wait until the button will be pressed
-    while (!rotatoryPress());
+    while (!rotaryPress());
 
     digitalWrite(frigo, HIGH);	// frigo OFF
 }
@@ -161,7 +161,7 @@ void heater (int fd)
     lcdPuts(fd,"  Press to stop");
 
     // wait until the button will be pressed
-    while (!rotatoryPress());
+    while (!rotaryPress());
 
     digitalWrite(serpentina, HIGH);	// serpentina OFF
 
