@@ -2,6 +2,7 @@
 
 void initCell ()
 {
+    printf("Cell initialized!\n");
     pinMode(frigo, OUTPUT);
     pinMode(serpentina, OUTPUT);
 }
@@ -17,7 +18,7 @@ float getTemperature ()
     if (fd == -1)
     {
         perror ("Couldn't open the w1 device.");
-        return 1;
+        return 18000;
     }
 
     while ((numRead = read(fd, buf, 256)) > 0)
@@ -53,13 +54,17 @@ float setCellTemperature (int load, int fd)
         }
         close(tmpFile);
     } else {
-        setTemperature (fd, &tmp);
-        int tmpFile = open("temperature", O_WRONLY);
+        int tmpFile = open("temperature", O_CREAT | O_WRONLY);
         char buff[256];
-        memset(buff, 0, 256);
-        sprintf(buff, "T=%d", tmp * 1000);
-        write(tmpFile, buff, sizeof(buff));
-        close(tmpFile);
+        setTemperature (fd, &tmp);
+        if (tmpFile != -1)
+        {
+            memset(buff, 0, 256);
+            sprintf(buff, "T=%d\n", tmp * 1000);
+            write(tmpFile, buff, 256);
+            close(tmpFile);
+            printf("Temperature stored\n");
+        }
     }
     return tmp;
 }
@@ -71,15 +76,13 @@ int fermentazione (int load, int fd)
     int sOn = 0;	// indica se la serpentina e' accesa o spenta
     float tmp;
 
-    pinMode(frigo, OUTPUT);
-    pinMode(serpentina, OUTPUT);
-
     digitalWrite(frigo, HIGH);	// frigo off
     digitalWrite(serpentina, HIGH);	// serpentina off
 
     tmp = setCellTemperature(load, fd);
+    printf("Temperature setted!");
 
-    printf("Cell running");
+    printf("Cell running\n");
     // display on screen
     lcdPosition(fd,0,0);
     lcdPuts(fd,"  CELL RUNNING");
@@ -94,11 +97,11 @@ int fermentazione (int load, int fd)
         }	
 
         t = getTemperature()/1000;
-        printf("%f\n", t);
+        printf("Tmperature: %2.2f\n", t);
         // display on screen
         lcdPosition(fd,0,1);
         char buff[16];
-        sprintf(buff, "Tmp -> %2.1f/[%2.1f]", t, tmp);
+        sprintf(buff, "Tmp -> %2.1f/[%2.1f]\n", t, tmp);
         lcdPuts(fd,buff);
         // "Tmp [current tmp] ([setted tmp])
 

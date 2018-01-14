@@ -5,9 +5,9 @@
 #include <wiringPi.h>
 #include <time.h>
 
-#define  RoAPin    0
-#define  RoBPin    1
-#define  RoSPin    2
+#define  RoAPin    4
+#define  RoBPin    5
+#define  RoSPin    6
 
 void initRotatory ();
 int rotatoryPress();
