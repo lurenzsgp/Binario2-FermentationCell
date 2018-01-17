@@ -30,7 +30,7 @@ float getTemperature ()
     }
     close(fd);
     return t;
-} 
+}
 
 float setCellTemperature (int load, int fd)
 {
@@ -49,18 +49,18 @@ float setCellTemperature (int load, int fd)
         while ((numRead = read(tmpFile, buf, 256)) > 0)
         {
             strncpy(tmpString, strstr(buf, "T=") + 2, 5);
-            printf("Temp: %s\n", tmpString);
-            tmp = atoi(tmpString)/1000;
         }
+        printf("Temp: %s\n", tmpString);
+        tmp = atoi(tmpString)/1000;
         close(tmpFile);
     } else {
-        int tmpFile = open("temperature", O_CREAT | O_WRONLY);
+        int tmpFile = open("temperature", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
         char buff[256];
         setTemperature (fd, &tmp);
         if (tmpFile != -1)
         {
             memset(buff, 0, 256);
-            sprintf(buff, "T=%d\n", tmp * 1000);
+            sprintf(buff, "T=%d\n", (int)tmp * 1000);
             write(tmpFile, buff, 256);
             close(tmpFile);
             printf("Temperature stored\n");
@@ -88,13 +88,13 @@ int fermentazione (int load, int fd)
     lcdPuts(fd,"  CELL RUNNING");
 
     while(1) {
-        if(rotaryPress()){ 
-            // button pressed 
+        if(rotaryPress()){
+            // button pressed
             // stop the execution
             digitalWrite(frigo, HIGH);      // frigo off
             digitalWrite(serpentina, HIGH); // serpentina off
             return;
-        }	
+        }
 
         t = getTemperature()/1000;
         printf("Tmperature: %2.2f\n", t);
