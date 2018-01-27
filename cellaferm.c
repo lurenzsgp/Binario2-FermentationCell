@@ -2,7 +2,6 @@
 
 void initCell ()
 {
-    printf("Cell initialized!\n");
     pinMode(frigo, OUTPUT);
     pinMode(serpentina, OUTPUT);
 }
@@ -24,7 +23,7 @@ float getTemperature ()
     while ((numRead = read(fd, buf, 256)) > 0)
     {
         strncpy(tmpData, strstr(buf, "t=") + 2, 5);
-        printf("Temp: %s\n", tmpData);
+        // printf("Temp: %s\n", tmpData);
         t = atoi(tmpData);
         //printf("Temp: %f C \t", t);
     }
@@ -38,33 +37,30 @@ float setCellTemperature (int load, int fd)
     if (load) {
         char buf[256];     // Data from device
         char tmpString[6];   // Temp C * 1000 reported by device
-        ssize_t numRead;
-        int tmpFile = open("temperature", O_RDONLY);
-        if (tmpFile == -1)
+        ssize_t nread=0;
+        FILE *tmpFile = fopen("./temperature.txt", "r");
+        if (tmpFile == NULL)
         {
             perror ("Couldn't open the temperature backup file.");
             return tmp;
         }
 
-        while ((numRead = read(tmpFile, buf, 256)) > 0)
-        {
-            strncpy(tmpString, strstr(buf, "T=") + 2, 5);
-        }
-        printf("Temp: %s\n", tmpString);
+        while ((nread = fread(buf + nread, 1, sizeof(buf) - nread , tmpFile)) > 0);
+        strncpy(tmpString, strstr(buf, "T=") + 2, 5);
+        // printf("Temp: %s\n", tmpString);
         tmp = atoi(tmpString)/1000;
-        close(tmpFile);
+        fclose(tmpFile);
     } else {
-        int tmpFile = open("temperature", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
-        char buff[256];
-        setTemperature (fd, &tmp);
-        if (tmpFile != -1)
-        {
-            memset(buff, 0, 256);
-            sprintf(buff, "T=%d\n", (int)tmp * 1000);
-            write(tmpFile, buff, 256);
-            close(tmpFile);
-            printf("Temperature stored\n");
+        FILE *tmpFile = fopen("./temperature.txt", "w");
+        if (tmpFile == NULL) {
+            perror ("Couldn't store the temperature");
+            return tmp;
         }
+        tmp = setTemperature (fd);
+        fprintf(tmpFile, "T=%d\n", (int)tmp * 1000);
+        fclose(tmpFile);
+        printf("Temperature stored\n");
+        delay(500);
     }
     return tmp;
 }
@@ -80,7 +76,6 @@ int fermentazione (int load, int fd)
     digitalWrite(serpentina, HIGH);	// serpentina off
 
     tmp = setCellTemperature(load, fd);
-    printf("Temperature setted!");
 
     printf("Cell running\n");
     // display on screen
@@ -128,7 +123,7 @@ int fermentazione (int load, int fd)
             printf("serpentina off\n");
             sOn = 0;
         }
-        delay(1000);
+        delay(2200);
     }
 }
 

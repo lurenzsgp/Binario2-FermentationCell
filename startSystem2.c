@@ -20,9 +20,7 @@ int main  (void)
     if (fd == -1){
 		printf("lcdInit 1 failed\n") ;
 		return 1;
-	} else {
-        printf("Display initialized!\n");
-    }
+	} 
 
     initRotatory(); 
     initCell();
@@ -35,12 +33,13 @@ int main  (void)
     while (1) 
     {
         //menu
+        printf("Selection menu\n");
         action = actionSelector(fd);
         lcdClear(fd);
         switch (action)
         {
-            case 1 :
-                printf("Start fermentation\n");
+            case 0 :
+                lcdClear(fd);
                 lcdPosition(fd, 0, 0);
                 lcdPuts(fd, "     Start");
                 lcdPosition(fd,0,1);
@@ -48,16 +47,16 @@ int main  (void)
                 delay(3000);
                 fermentazione(0, fd);
                 break;
-            case 2 :
-                printf("Cold on\n");
+            case 1 :
+                lcdClear(fd);
                 lcdPosition(fd, 0, 0);
                 lcdPuts(fd, "   Fridge ON");
                 lcdPosition(fd,0,1);
                 lcdPuts(fd, "Need a Cold one");
                 delay(3000);
                 cooler();
-            case 3 :
-                printf("Heat on\n");
+            case 2 :
+                lcdClear(fd);
                 lcdPosition(fd, 0, 0);
                 lcdPuts(fd, " Serpentine ON");
                 lcdPosition(fd,0,1);
@@ -66,10 +65,10 @@ int main  (void)
                 heater();
                 break;
             default :
-                printf("Default case\n");
                 // start the cell
                 // case for unexpected reboot
                 fermentazione(1,fd);
         }
+        delay(1000);
     }
 }

@@ -12,4 +12,4 @@
 void initRotatory ();
 int rotatoryPress();
 int actionSelector (int fd);
-void setTemperature (int fd, float *t);
+float setTemperature (int fd);

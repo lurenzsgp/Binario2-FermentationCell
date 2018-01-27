@@ -31,7 +31,6 @@ int rotaryPress(void)
 
 void initRotatory ()
 {
-    printf("Rotatory initialized!\n");
     pinMode(RoAPin, INPUT);
 	pinMode(RoBPin, INPUT);
 	pinMode(RoSPin, INPUT);
@@ -41,92 +40,94 @@ void initRotatory ()
 
 int actionSelector(int fd)
 {
-	int action = 1;
+	int action = 300;
     int ferm, cold, heat;
     lcdClear(fd);
     time_t start = time(NULL);
 
     ferm = cold = heat = 0;
 
-    printf("Press to select\n");
     lcdPosition(fd,0,0);
     lcdPuts(fd,"    Press to");
 
 	while(1){
         if (time(NULL) - start > 300) {
             printf("Time out\n");
-            return 0;
+            return -1;
         }
 
         switch (action)
         {
-            case 1 :
+            case 0 :
                 if (!ferm)
                 {
-                    printf("Start Fermentation\n");
+                    lcdClear(fd);
+                    lcdPosition(fd,0,0);
+                    lcdPuts(fd,"    Press to");
                     lcdPosition(fd,0,1);
                     lcdPuts(fd,"   Start Cell");
                     ferm = 1;
                     cold = heat = 0;
                 }
                 break;
-            case 2 :
+            case 1 :
                 if (!cold)
                 {
-                    printf("Cold on\n");
+                    lcdClear(fd);
+                    lcdPosition(fd,0,0);
+                    lcdPuts(fd,"    Press to");
                     lcdPosition(fd,0,1);
                     lcdPuts(fd,"  Start Fridge");
                     cold = 1;
                     ferm = heat = 0;
                 }
                 break;
-            case 3 :
+            case 2 :
                 if (!heat)
                 {
-                    printf("Heat on\n");;
+                    lcdClear(fd);
+                    lcdPosition(fd,0,0);
+                    lcdPuts(fd,"    Press to");
                     lcdPosition(fd,0,1);
                     lcdPuts(fd,"Start Serpentine");
                     heat = 1;
                     cold = ferm = 0;
                 }
                 break;
-
         }
 
         if (rotaryPress())
             break;
 
 		action += rotaryDeal();
-        if (action < 1) {
-            action = 1;
-        } else if (action > 3) {
-            action = 3;
-        }
-	}
+        action = action % 3;
+        if (action < 0)
+            action += 3;
+    }
 
-    printf("Action Selected!\n");
 	return action;
 }
 
-void setTemperature (int fd, float *t)
+float  setTemperature (int fd)
 {
+    float t = 18.;
     printf("Set temperature\nPress to confirm\n");
     lcdPosition(fd,0,0);
     lcdPuts(fd,"Press to confirm");
     while (1) {
         char buff[16];
-        sprintf(buff, "Tmp   -->   %2.1f\n", *t);
+        sprintf(buff, "Tmp   -->   %2.1f\n", t);
         lcdPosition(fd,0,1);
         lcdPuts(fd,buff);
         if (rotaryPress())
-            return;
+            return t; 
 
-        *t += rotaryDeal();
+        t += rotaryDeal();
 
-        if (*t > 30) {
-            *t = 30;
-        } else if (*t < -10) {
-            *t = -10;
+        if (t > 30) {
+            t = 30;
+        } else if (t < -10) {
+            t = -10;
         }
     }
 }
