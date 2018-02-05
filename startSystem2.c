@@ -55,6 +55,7 @@ int main  (void)
                 lcdPuts(fd, "Need a Cold one");
                 delay(3000);
                 cooler();
+                break;
             case 2 :
                 lcdClear(fd);
                 lcdPosition(fd, 0, 0);
