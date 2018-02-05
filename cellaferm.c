@@ -78,9 +78,6 @@ int fermentazione (int load, int fd)
     tmp = setCellTemperature(load, fd);
 
     printf("Cell running\n");
-    // display on screen
-    lcdPosition(fd,0,0);
-    lcdPuts(fd,"  CELL RUNNING");
 
     while(1) {
         if(rotaryPress()){
@@ -96,9 +93,15 @@ int fermentazione (int load, int fd)
         // display on screen
         lcdPosition(fd,0,1);
         char buff[16];
-        sprintf(buff, "Tmp -> %2.1f/[%2.1f]\n", t, tmp);
+        // "T  -> [current tmp]/ ([setted tmp])
+        sprintf(buff, "T  -> %2.1f/[%2.1f]\n", t, tmp);
+        
+
+        lcdClear(fd);
+        lcdPosition(fd,0,0);
+        lcdPuts(fd,"  CELL RUNNING");
         lcdPuts(fd,buff);
-        // "Tmp [current tmp] ([setted tmp])
+        
 
         if( t >  tmp + 1 && fOn == 0 ) {
             digitalWrite(frigo, LOW);	// frigo on
@@ -133,6 +136,7 @@ void cooler (int fd)
 
     printf("Fridge ON");
     // print on display
+    lcdClear(fd);
     lcdPosition(fd,0,0);
     lcdPuts(fd,"   FRIDGE ON");
     // "Fridge ON"
@@ -152,6 +156,7 @@ void heater (int fd)
 
     printf("Serpentine ON");
     // print on display
+    lcdClear(fd);
     lcdPosition(fd,0,0);
     lcdPuts(fd,"  SERPENTINE ON");
     // "Serpentine ON"

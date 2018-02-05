@@ -42,13 +42,13 @@ int actionSelector(int fd)
 {
 	int action = 300;
     int ferm, cold, heat;
-    lcdClear(fd);
     time_t start = time(NULL);
 
     ferm = cold = heat = 0;
 
-    lcdPosition(fd,0,0);
-    lcdPuts(fd,"    Press to");
+    // lcdClear(fd);
+    // lcdPosition(fd,0,0);
+    // lcdPuts(fd,"    Press to");
 
 	while(1){
         if (time(NULL) - start > 300) {
@@ -112,13 +112,18 @@ float  setTemperature (int fd)
 {
     float t = 18.;
     printf("Set temperature\nPress to confirm\n");
-    lcdPosition(fd,0,0);
-    lcdPuts(fd,"Press to confirm");
+
+    
     while (1) {
         char buff[16];
         sprintf(buff, "Tmp   -->   %2.1f\n", t);
+
+        lcdClear(fd);
+        lcdPosition(fd,0,0);
+        lcdPuts(fd,"Press to confirm");
         lcdPosition(fd,0,1);
         lcdPuts(fd,buff);
+        
         if (rotaryPress())
             return t; 
 
