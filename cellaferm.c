@@ -92,7 +92,7 @@ int fermentazione (int load, int fd)
         printf("Tmperature: %2.2f\n", t);
         char buff[16];
         // "T  -> [current tmp]/ ([setted tmp])
-        sprintf(buff, "T  -> %2.1f/[%2.1f]\n", t, tmp);
+        sprintf(buff, "T -> %2.1f/[%2.1f]\n", t, tmp);
         
 
         // display on screen
