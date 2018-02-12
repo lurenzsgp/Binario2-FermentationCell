@@ -90,16 +90,16 @@ int fermentazione (int load, int fd)
 
         t = getTemperature()/1000;
         printf("Tmperature: %2.2f\n", t);
-        // display on screen
-        lcdPosition(fd,0,1);
         char buff[16];
         // "T  -> [current tmp]/ ([setted tmp])
         sprintf(buff, "T  -> %2.1f/[%2.1f]\n", t, tmp);
         
 
+        // display on screen
         lcdClear(fd);
         lcdPosition(fd,0,0);
         lcdPuts(fd,"  CELL RUNNING");
+        lcdPosition(fd,0,1);
         lcdPuts(fd,buff);
         
 
